@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
        @Override public void onStart(){adapter.onStart();}
        @Override public void onLayout(android.print.PrintAttributes oldAttrs,android.print.PrintAttributes newAttrs,android.os.CancellationSignal signal,LayoutResultCallback callback,Bundle extras){adapter.onLayout(oldAttrs,newAttrs,signal,callback,extras);}
        @Override public void onWrite(android.print.PageRange[] pages,android.os.ParcelFileDescriptor target,android.os.CancellationSignal signal,WriteResultCallback callback){adapter.onWrite(pages,target,signal,callback);}
-       @Override public void onFinish(){adapter.onFinish();document.post(()->releasePrint(document));}
+       @Override public void onFinish(){adapter.onFinish();new android.os.Handler(android.os.Looper.getMainLooper()).post(()->releasePrint(document));}
       },new android.print.PrintAttributes.Builder().setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4).setColorMode(android.print.PrintAttributes.COLOR_MODE_MONOCHROME).setMinMargins(new android.print.PrintAttributes.Margins(0,0,0,0)).build());}
       catch(Exception e){toast("Impression impossible : "+e.getMessage());releasePrint(document);}
      });
