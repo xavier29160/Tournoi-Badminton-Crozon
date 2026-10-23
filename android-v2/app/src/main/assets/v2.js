@@ -99,7 +99,7 @@ function decoratePools(){
  }
  });
 }
-function choosePool(id){activePool=id;render();}
+function choosePool(id){activePool=id;render();if(id){const title=document.querySelector('#app > section.card:not([hidden]) .pool-heading');if(title)title.scrollIntoView({block:'start'});}}
 function toggleMatch(a,b){const key=pairKey(a,b);state.matchStatus[key]=state.matchStatus[key]==='playing'?'pending':'playing';save();render();}
 window.appBack=()=>{if(view!=='home'){go('home');return true;}return false;};
 function formatPlayer(p){return p.name+(p.club?' ('+p.club+')':'');}

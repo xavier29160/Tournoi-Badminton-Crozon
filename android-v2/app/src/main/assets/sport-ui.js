@@ -49,7 +49,7 @@ render=function(){
  document.documentElement.dataset.theme=workspace.theme;
  document.body.dataset.view=view;
  const header=document.querySelector('header');
- header.innerHTML=`<div class="sport-brand"><span class="brand-symbol">${sportIcon('shuttle')}</span><span><strong>CROZON<span>BADMINTON</span></strong></span></div><div class="header-right"><button id="openPrinting" class="print-shortcut" onclick="printDisplayedPool()">🖨 Imprimer</button><span class="offline-badge">V2.2.1</span><button class="icon-button" onclick="sportTheme()" aria-label="Changer le thème">${sportIcon('moon')}</button></div>`;
+ header.innerHTML=`<div class="sport-brand"><span class="brand-symbol">${sportIcon('shuttle')}</span><span><strong>CROZON<span>BADMINTON</span></strong></span></div><div class="header-right"><button id="openPrinting" class="print-shortcut" onclick="printDisplayedPool()">🖨 Imprimer</button><span class="offline-badge">V2.2.2</span><button class="icon-button" onclick="sportTheme()" aria-label="Changer le thème">${sportIcon('moon')}</button></div>`;
  const nav=$('nav'),tabs=[['home','Accueil'],['teams','Équipes'],['matches','Matchs'],['standings','Classement'],['finals','Tableaux'],['more','Plus']];
  nav.setAttribute('aria-label','Navigation principale');nav.innerHTML=tabs.map(([v,title])=>`<button class="${view===v||v==='more'&&['players','backup','printing'].includes(view)?'selected':''}" ${view===v?'aria-current="page"':''} onclick="go('${v}')">${sportIcon(v)}<span>${title}</span></button>`).join('');
  if(!$('context')){const box=document.createElement('section');box.id='context';box.className='context';nav.before(box);}
@@ -59,7 +59,7 @@ render=function(){
  if(['teams','matches','standings'].includes(view))decoratePools();
  if(view==='finals')sportFinalsLayout();
  if(view==='players')$('app').querySelector('.card > .actions')?.classList.add('clubfilters');
- if(['matches','standings','backup','more'].includes(view))addPoolPrintControls();
- updatePrintDock();
+ if(['teams','matches','standings'].includes(view))addDirectPoolPrintButtons();
+ if(['backup','more'].includes(view))addPoolPrintControls();
 };
 render();

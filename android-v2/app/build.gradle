@@ -1,3 +1,5 @@
 plugins { id "com.android.application" }
 android { namespace "fr.crozon.badminton"; compileSdk 35
- defaultConfig { applicationId "fr.crozon.badminton.v2"; minSdk 26; targetSdk 35; versionCode 203; versionName "2.2.1" } }
+ defaultConfig { applicationId "fr.crozon.badminton.v2"; minSdk 26; targetSdk 35; versionCode 204; versionName "2.2.2"; testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" } }
+
+dependencies { androidTestImplementation "androidx.test:runner:1.6.2"; androidTestImplementation "androidx.test:rules:1.6.1"; androidTestImplementation "androidx.test.ext:junit:1.2.1" }

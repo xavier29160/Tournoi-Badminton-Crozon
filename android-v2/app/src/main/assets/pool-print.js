@@ -2,10 +2,17 @@ function printDisplayedPool(){
  if(['teams','matches','standings'].includes(view)&&activePool){printPoolSheets(activePool);return;}
  openPoolPrinting();
 }
-function updatePrintDock(){
- let dock=document.getElementById('printDock');if(!dock){dock=document.createElement('aside');dock.id='printDock';dock.className='no-print';document.body.append(dock);}
- const selected=['teams','matches','standings'].includes(view)&&state.pools.find(p=>p.id===activePool);
- dock.innerHTML=`<button id="printDisplayedPool" onclick="printDisplayedPool()">🖨 ${selected?'Imprimer cette poule · '+esc(selected.name):'Imprimer les poules'}</button>`;
+function addDirectPoolPrintButtons(){
+ const cards=[...$('app').querySelectorAll(':scope > section.card')].slice(1);
+ cards.forEach((card,i)=>{
+  const pool=state.pools[i],title=card.querySelector('h2');if(!pool||!title)return;
+  let heading=title.parentElement;
+  if(heading===card){heading=document.createElement('div');title.before(heading);heading.append(title);}
+  heading.classList.add('pool-heading');
+  const button=document.createElement('button');button.type='button';button.className='primary pool-print-direct no-print';
+  button.dataset.printPool=pool.id;button.textContent='Imprimer';button.setAttribute('aria-label','Imprimer '+pool.name);
+  button.onclick=()=>printPoolSheets(pool.id);heading.append(button);
+ });
 }
 function openPoolPrinting(){go('printing');window.scrollTo(0,0);}
 function renderPoolPrinting(){$('app').innerHTML='';addPoolPrintControls();}
