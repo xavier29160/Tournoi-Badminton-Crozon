@@ -28,10 +28,6 @@ public class PoolPrintTest {
   InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.evaluateJavascript(script,value->{result.set(value);done.countDown();}));
   assertTrue("Réponse JavaScript",done.await(15,TimeUnit.SECONDS));return result.get();
  }
- private void saveScreenshot(String name) throws Exception {
-  android.graphics.Bitmap bitmap=InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-  if(bitmap!=null)try(java.io.FileOutputStream out=new java.io.FileOutputStream(new java.io.File(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir(),name))){bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}
- }
  @Test public void poolTitleButtonOpensOnlyThatPoolInAndroidPrintView() throws Exception {
   MainActivity screen=activity.getActivity();AtomicReference<WebView> reference=new AtomicReference<>();
   InstrumentationRegistry.getInstrumentation().runOnMainSync(()->reference.set(findWeb(screen.getWindow().getDecorView())));
@@ -42,7 +38,6 @@ public class PoolPrintTest {
   // Le pont est celui du WebView Android installé, pas un remplacement de test.
   assertEquals("true",js(app,"typeof AndroidExport.printHtml==='function'"));
   assertEquals("true",js(app,"go('matches');choosePool('A');(function(){var b=document.querySelector('[data-print-pool=\"A\"]');return !!b && b.parentElement.querySelector('h2').textContent.indexOf('Poule A')===0 && b.getBoundingClientRect().top>=0 && b.getBoundingClientRect().top<innerHeight;})()"));
-  saveScreenshot("poule-a-button.png");
   js(app,"document.querySelector('[data-print-pool=\"A\"]').click()");
   Field field=MainActivity.class.getDeclaredField("printWeb");field.setAccessible(true);
   AtomicReference<WebView> print=new AtomicReference<>();deadline=System.currentTimeMillis()+15000;
@@ -53,6 +48,5 @@ public class PoolPrintTest {
   assertEquals("Une page contenant la poule A, ses 10 matchs et son classement", "true", document);
   // Laisser le dialogue d’impression être affiché ; aucun envoi à une imprimante.
   Thread.sleep(2500);
-  saveScreenshot("poule-a-print-preview.png");
  }
 }

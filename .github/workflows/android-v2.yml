@@ -45,11 +45,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: |
-            cd android-v2 && gradle :app:connectedDebugAndroidTest --no-daemon
-            mkdir -p android-v2/app/build/android-qa
-            adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-button.png > android-v2/app/build/android-qa/poule-a-button.png
-            adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-print-preview.png > android-v2/app/build/android-qa/poule-a-print-preview.png
+          script: cd android-v2 && gradle :app:connectedDebugAndroidTest --no-daemon
       - name: Publier l’APK V2 et les rapports
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,4 +56,3 @@ jobs:
             android-v2/app/build/outputs/apk/debug/app-debug.apk
             android-v2/app/build/reports/lint-results-debug.html
             android-v2/app/build/reports/androidTests/connected/debug
-            android-v2/app/build/android-qa
