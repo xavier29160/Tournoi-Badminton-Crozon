@@ -38,7 +38,7 @@ public class PoolPrintTest {
   WebView app=reference.get();assertNotNull(app);
   long deadline=System.currentTimeMillis()+30000;
   while(!"true".equals(js(app,"typeof addDirectPoolPrintButtons==='function'"))&&System.currentTimeMillis()<deadline)Thread.sleep(100);
-  assertEquals("true",js(app,"typeof addDirectPoolPrintButtons==='function'"));
+  assertEquals("Chargement de l’interface : "+js(app,"navigator.userAgent"),"true",js(app,"typeof addDirectPoolPrintButtons==='function'"));
   // Le pont est celui du WebView Android installé, pas un remplacement de test.
   assertEquals("true",js(app,"typeof AndroidExport.printHtml==='function'"));
   assertEquals("true",js(app,"go('matches');choosePool('A');(function(){var b=document.querySelector('[data-print-pool=\"A\"]');return !!b && b.parentElement.querySelector('h2').textContent.indexOf('Poule A')===0 && b.getBoundingClientRect().top>=0 && b.getBoundingClientRect().top<innerHeight;})()"));

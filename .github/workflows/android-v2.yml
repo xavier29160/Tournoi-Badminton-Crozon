@@ -40,17 +40,18 @@ jobs:
       - name: Vérifier le bouton et la feuille dans Android
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 35
+          target: google_apis
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: cd android-v2 && gradle :app:connectedDebugAndroidTest --no-daemon
-      - name: Récupérer les captures du test Android
-        run: |
-          mkdir -p android-v2/app/build/android-qa
-          adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-button.png > android-v2/app/build/android-qa/poule-a-button.png
-          adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-print-preview.png > android-v2/app/build/android-qa/poule-a-print-preview.png
+          script: |
+            cd android-v2 && gradle :app:connectedDebugAndroidTest --no-daemon
+            mkdir -p android-v2/app/build/android-qa
+            adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-button.png > android-v2/app/build/android-qa/poule-a-button.png
+            adb exec-out run-as fr.crozon.badminton.v2 cat files/poule-a-print-preview.png > android-v2/app/build/android-qa/poule-a-print-preview.png
       - name: Publier l’APK V2 et les rapports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Tournoi-Crozon-V2-APK
