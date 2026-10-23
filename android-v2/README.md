@@ -2,6 +2,8 @@
 
 Application Android hors connexion, issue du projet V3 du ZIP original.
 
+Version 2.2.3 : bouton clair/sombre rétabli dans l’en-tête sur téléphone, juste à côté d’Imprimer. Icône soleil en mode sombre, lune en mode clair. Emplacements d’impression conservés. Signature permanente identique à la V2.2.2 pour une mise à jour sans désinstallation.
+
 Version 2.2.2 : bouton Imprimer directement à côté du titre de chaque poule dans Équipes, Matchs et Classement. Un clic ouvre la feuille de cette poule dans le dialogue Android ; l’en-tête reste visible au défilement. Suppression de l’impression générique de l’écran des sauvegardes. Test instrumenté sur émulateur Android.
 
 Version 2.2.1 : bouton d’impression permanent au-dessus de la navigation sur téléphone. Une poule sélectionnée dans Équipes, Matchs ou Classement s’imprime directement ; sinon le bouton ouvre le choix des feuilles. Accès aussi dans l’en-tête et le menu Plus ; numéro de version visible.

@@ -10,6 +10,7 @@ const sportIcons={
  settings:'<path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3"/><circle cx="16" cy="17" r="3"/>',
  arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
  backup:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
  moon:'<path d="M20 14A9 9 0 0 1 10 3a9 9 0 1 0 10 11Z"/>',
  shuttle:'<path d="m9 15-6-10 5-2 3 11m0 0L12 2l4 1-3 12m0 0 5-10 3 3-6 9m-6-2 6 2-2 4-4-1Z"/>'
 };
@@ -49,7 +50,7 @@ render=function(){
  document.documentElement.dataset.theme=workspace.theme;
  document.body.dataset.view=view;
  const header=document.querySelector('header');
- header.innerHTML=`<div class="sport-brand"><span class="brand-symbol">${sportIcon('shuttle')}</span><span><strong>CROZON<span>BADMINTON</span></strong></span></div><div class="header-right"><button id="openPrinting" class="print-shortcut" onclick="printDisplayedPool()">🖨 Imprimer</button><span class="offline-badge">V2.2.2</span><button class="icon-button" onclick="sportTheme()" aria-label="Changer le thème">${sportIcon('moon')}</button></div>`;
+ header.innerHTML=`<div class="sport-brand"><span class="brand-symbol">${sportIcon('shuttle')}</span><span><strong>CROZON<span>BADMINTON</span></strong></span></div><div class="header-right"><button id="openPrinting" class="print-shortcut" onclick="printDisplayedPool()">🖨 Imprimer</button><span class="offline-badge">V2.2.3</span><button id="themeToggle" class="icon-button" onclick="sportTheme()" aria-label="Passer au mode ${workspace.theme==='dark'?'clair':'sombre'}" title="Passer au mode ${workspace.theme==='dark'?'clair':'sombre'}">${sportIcon(workspace.theme==='dark'?'sun':'moon')}</button></div>`;
  const nav=$('nav'),tabs=[['home','Accueil'],['teams','Équipes'],['matches','Matchs'],['standings','Classement'],['finals','Tableaux'],['more','Plus']];
  nav.setAttribute('aria-label','Navigation principale');nav.innerHTML=tabs.map(([v,title])=>`<button class="${view===v||v==='more'&&['players','backup','printing'].includes(view)?'selected':''}" ${view===v?'aria-current="page"':''} onclick="go('${v}')">${sportIcon(v)}<span>${title}</span></button>`).join('');
  if(!$('context')){const box=document.createElement('section');box.id='context';box.className='context';nav.before(box);}
