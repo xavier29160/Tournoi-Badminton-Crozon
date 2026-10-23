@@ -1,8 +1,19 @@
+function printDisplayedPool(){
+ if(['teams','matches','standings'].includes(view)&&activePool){printPoolSheets(activePool);return;}
+ openPoolPrinting();
+}
+function updatePrintDock(){
+ let dock=document.getElementById('printDock');if(!dock){dock=document.createElement('aside');dock.id='printDock';dock.className='no-print';document.body.append(dock);}
+ const selected=['teams','matches','standings'].includes(view)&&state.pools.find(p=>p.id===activePool);
+ dock.innerHTML=`<button id="printDisplayedPool" onclick="printDisplayedPool()">🖨 ${selected?'Imprimer cette poule · '+esc(selected.name):'Imprimer les poules'}</button>`;
+}
+function openPoolPrinting(){go('printing');window.scrollTo(0,0);}
+function renderPoolPrinting(){$('app').innerHTML='';addPoolPrintControls();}
 /* Feuilles autonomes : équipes, rencontres et classement sur une page par poule. */
 function addPoolPrintControls(){
  const section=document.createElement('div');section.className='card no-print';section.id='poolPrintControls';
  section.innerHTML=`<h2>Imprimer les feuilles de poules</h2><p>Une page A4 par poule : équipes, matchs, scores et classement. À afficher ou à laisser sur le terrain.</p><label>Poule <select id="printPool" aria-label="Poule à imprimer"><option value="">Toutes les poules</option>${state.pools.map(p=>`<option value="${esc(p.id)}" ${activePool===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label> <label>Contenu <select id="printMode" aria-label="Contenu des feuilles"><option value="results">Avec les résultats actuels</option><option value="blank">Feuilles vierges à remplir</option></select></label><div class="actions"><button class="primary" onclick="printPoolSheets(document.getElementById('printPool').value,document.getElementById('printMode').value)">🖨️ Imprimer les feuilles</button></div>`;
- $('app').append(section);
+ $('app').prepend(section);
 }
 function buildPoolPrintHtml(poolId='',mode='results'){
  const pools=state.pools.filter(p=>!poolId||p.id===poolId),blank=mode==='blank';
