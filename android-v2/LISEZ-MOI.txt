@@ -1,0 +1,6 @@
+TOURNOI BADMINTON CROZON V2
+
+Projet Android préparé à partir du ZIP V3, conservé intact dans le dépôt.
+Consulter README.md pour les fonctionnalités, les sauvegardes, les tests et la compilation automatisée GitHub Actions.
+
+Application distincte de la V1, utilisable hors connexion. Les résultats de la V1 se transfèrent par export/restauration JSON.
