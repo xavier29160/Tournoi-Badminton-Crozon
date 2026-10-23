@@ -38,15 +38,18 @@ public class PoolPrintTest {
   // Le pont est celui du WebView Android installé, pas un remplacement de test.
   assertEquals("true",js(app,"typeof AndroidExport.printHtml==='function'"));
   assertEquals("true",js(app,"go('matches');choosePool('A');(function(){var b=document.querySelector('[data-print-pool=\"A\"]');return !!b && b.parentElement.querySelector('h2').textContent.indexOf('Poule A')===0 && b.getBoundingClientRect().top>=0 && b.getBoundingClientRect().top<innerHeight;})()"));
-  js(app,"document.querySelector('[data-print-pool=\"A\"]').click()");
+  js(app,"document.querySelector('[data-print-pool=\"A\"]').click();document.getElementById('printChoiceBlank').click()");
   Field field=MainActivity.class.getDeclaredField("printWeb");field.setAccessible(true);
   AtomicReference<WebView> print=new AtomicReference<>();deadline=System.currentTimeMillis()+15000;
   do{InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{try{print.set((WebView)field.get(screen));}catch(IllegalAccessException e){throw new RuntimeException(e);}});if(print.get()==null)Thread.sleep(100);}while(print.get()==null&&System.currentTimeMillis()<deadline);
   assertNotNull("Le clic doit ouvrir le document Android dédié",print.get());
   String document="false";deadline=System.currentTimeMillis()+15000;
-  do{document=js(print.get(),"(function(){return document.querySelectorAll('.sheet').length===1 && document.querySelector('h1').textContent.indexOf('Poule A')===0 && document.querySelectorAll('.matches tbody tr').length===10 && !!document.querySelector('.rankings') && document.body.textContent.indexOf('Récupération locale')<0;})()");if(!"true".equals(document))Thread.sleep(100);}while(!"true".equals(document)&&System.currentTimeMillis()<deadline);
+  do{document=js(print.get(),"(function(){return document.querySelectorAll('.sheet').length===1 && document.querySelector('h1').textContent.indexOf('Poule A')===0 && document.querySelectorAll('.matches tbody tr').length===10 && document.querySelector('.matches tbody tr').cells[0].textContent==='1 contre 2' && document.querySelectorAll('.matches th').length===5 && !!document.querySelector('.rankings') && document.body.textContent.indexOf('Récupération locale')<0;})()");if(!"true".equals(document))Thread.sleep(100);}while(!"true".equals(document)&&System.currentTimeMillis()<deadline);
   assertEquals("Une page contenant la poule A, ses 10 matchs et son classement", "true", document);
   // Laisser le dialogue d’impression être affiché ; aucun envoi à une imprimante.
   Thread.sleep(2500);
+  // Fermer le dialogue avant la destruction de l’activité de test.
+  InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent KEYCODE_BACK").close();
+  Thread.sleep(1500);
  }
 }
