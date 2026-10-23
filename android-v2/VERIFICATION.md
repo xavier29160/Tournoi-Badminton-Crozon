@@ -2,11 +2,11 @@
 
 ## Résultats
 
-- 16 tests automatisés réussis : moteur, interface intégrée, anciennes sauvegardes, tournois/catégories, répertoire, suggestions, scores et exemptions.
-- Contrôle dans Chromium : formats 412 × 915 et 1366 × 900, navigation par poule, recherche sans accents, suggestions, tableaux, thème sombre et persistance après réouverture ; aucune erreur JavaScript ni débordement horizontal mobile.
+- 18 tests automatisés réussis : moteur, interface intégrée, anciennes sauvegardes, tournois/catégories, répertoire, suggestions, scores et exemptions.
+- Contrôle dans Chromium : formats 360 × 800, 412 × 915 et 1366 × 900, navigation par poule, recherche sans accents, suggestions, tableaux, thème sombre et persistance après réouverture ; aucune erreur JavaScript ni débordement horizontal mobile. La nouvelle navigation, les onglets de tableaux et la saisie sans perte de focus sont vérifiés.
 - Compilation Android locale : `:app:assembleDebug :app:lintDebug`, JDK 17, Gradle 8.9, API 35 : réussite.
 - Signature APK vérifiée avec `apksigner verify`.
-- APK : `fr.crozon.badminton.v2`, version 2.0 (200), Android 8.0 minimum, cible Android 15.
+- APK : `fr.crozon.badminton.v2`, version 2.1 (201), Android 8.0 minimum, cible Android 15.
 - Analyse lint : 0 erreur, 2 avertissements attendus (JavaScript requis par l’interface locale ; attribut Retour réservé à Android 13 et versions suivantes).
 - ZIP d’origine, README initial et workflow V1 inchangés.
 

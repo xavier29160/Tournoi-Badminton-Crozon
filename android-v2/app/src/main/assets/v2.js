@@ -95,7 +95,7 @@ function decoratePools(){
  if(view==='matches'){
   const pairs=schedule(poolTeams(p.id).map(t=>t.id));const done=pairs.filter(([a,b])=>scoreStats(a,b).done).length;
   card.insertAdjacentHTML('afterbegin',`<progress max="${pairs.length||1}" value="${done}" aria-label="Progression ${esc(p.name)}"></progress>`);
-  [...card.querySelectorAll('.match')].forEach((el,j)=>{const [a,b]=pairs[j],key=pairKey(a,b),s=scoreStats(a,b),status=s.done?'Terminé':state.matchStatus[key]==='playing'?'En cours':(state.scores[key]||[]).some(set=>set?.some(x=>x!==''&&x!==null))?'Score en cours':'À jouer';el.insertAdjacentHTML('beforeend',`<div class="flex"><span class="pill">${status}</span>${!s.done?`<button onclick="toggleMatch('${a}','${b}')">${state.matchStatus[key]==='playing'?'Remettre à jouer':'Démarrer le match'}</button>`:''}</div>`);});
+  [...card.querySelectorAll('.match')].forEach((el,j)=>{if(el.dataset.sportMatch)return;const [a,b]=pairs[j],key=pairKey(a,b),s=scoreStats(a,b),status=s.done?'Terminé':state.matchStatus[key]==='playing'?'En cours':(state.scores[key]||[]).some(set=>set?.some(x=>x!==''&&x!==null))?'Score en cours':'À jouer';el.insertAdjacentHTML('beforeend',`<div class="flex"><span class="pill">${status}</span>${!s.done?`<button onclick="toggleMatch('${a}','${b}')">${state.matchStatus[key]==='playing'?'Remettre à jouer':'Démarrer le match'}</button>`:''}</div>`);});
  }
  });
 }

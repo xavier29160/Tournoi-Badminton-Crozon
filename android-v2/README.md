@@ -2,6 +2,8 @@
 
 Application Android hors connexion, issue du projet V3 du ZIP original.
 
+Version 2.1 : interface sportive avec typographie Barlow intégrée hors connexion, tableau de bord, navigation inférieure sur téléphone, réglages repliables, tableaux principal/consolante à onglets et scores alignés sans perte de focus. Le menu Plus donne accès au répertoire et aux sauvegardes. Les données 2.0 sont conservées lors d’une mise à jour signée avec le même certificat.
+
 ## Préservation de la V1
 
 Le ZIP `Projet_Android_Tournoi_Crozon_V3.zip` et son workflow restent inchangés.
