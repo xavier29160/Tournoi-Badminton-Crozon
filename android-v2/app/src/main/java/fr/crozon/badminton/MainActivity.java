@@ -28,6 +28,8 @@ public class MainActivity extends Activity {
   web.getSettings().setAllowFileAccess(false);
   web.getSettings().setAllowContentAccess(true);
   web.getSettings().setTextZoom(100);
+  web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+  web.clearCache(true);
   web.setOnApplyWindowInsetsListener((v,insets)->{
    v.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());
    return insets;
