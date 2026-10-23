@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
  private WebView web;
+ private WebView printWeb;
  private ValueCallback<Uri[]> chooser;
  private static final int PICK = 34, SAVE = 35;
  private String pendingContent;
@@ -66,6 +67,32 @@ public class MainActivity extends Activity {
   }
  }
  private class ExportBridge {
+  @JavascriptInterface public void printHtml(String html){runOnUiThread(()->{
+   if(printWeb!=null){toast("Une impression est déjà en cours");return;}
+   final WebView document=new WebView(MainActivity.this);
+   printWeb=document;
+   document.getSettings().setJavaScriptEnabled(true);
+   document.getSettings().setAllowFileAccess(false);
+   document.getSettings().setAllowContentAccess(false);
+   document.setWebViewClient(new WebViewClient(){
+    @Override public void onPageFinished(WebView view,String url){
+     document.evaluateJavascript("fitSheets();",ignored->{
+      if(isFinishing()||isDestroyed())return;
+      PrintManager manager=(PrintManager)getSystemService(PRINT_SERVICE);
+      if(manager==null){toast("Service d’impression indisponible");releasePrint(document);return;}
+      android.print.PrintDocumentAdapter adapter=document.createPrintDocumentAdapter("Feuilles de poules Crozon");
+      try{manager.print("Feuilles de poules Crozon",new android.print.PrintDocumentAdapter(){
+       @Override public void onStart(){adapter.onStart();}
+       @Override public void onLayout(android.print.PrintAttributes oldAttrs,android.print.PrintAttributes newAttrs,android.os.CancellationSignal signal,LayoutResultCallback callback,Bundle extras){adapter.onLayout(oldAttrs,newAttrs,signal,callback,extras);}
+       @Override public void onWrite(android.print.PageRange[] pages,android.os.ParcelFileDescriptor target,android.os.CancellationSignal signal,WriteResultCallback callback){adapter.onWrite(pages,target,signal,callback);}
+       @Override public void onFinish(){adapter.onFinish();releasePrint(document);}
+      },new android.print.PrintAttributes.Builder().setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4).setColorMode(android.print.PrintAttributes.COLOR_MODE_MONOCHROME).setMinMargins(new android.print.PrintAttributes.Margins(0,0,0,0)).build());}
+      catch(Exception e){toast("Impression impossible : "+e.getMessage());releasePrint(document);}
+     });
+    }
+   });
+   document.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
+  });}
   @JavascriptInterface public void printPage(){runOnUiThread(()->{
    PrintManager manager=(PrintManager)getSystemService(PRINT_SERVICE);
    if(manager!=null)manager.print("Tournoi Crozon V2",web.createPrintDocumentAdapter("Tournoi Crozon V2"),null);
@@ -93,5 +120,6 @@ public class MainActivity extends Activity {
   }
  }
  @Override public void onBackPressed(){web.evaluateJavascript("window.appBack ? appBack() : false",value->{if(!"true".equals(value))MainActivity.super.onBackPressed();});}
- @Override protected void onDestroy(){if(chooser!=null)chooser.onReceiveValue(null);web.removeJavascriptInterface("AndroidExport");web.destroy();super.onDestroy();}
+ private void releasePrint(WebView document){if(printWeb==document){printWeb=null;document.destroy();}}
+ @Override protected void onDestroy(){if(printWeb!=null)releasePrint(printWeb);if(chooser!=null)chooser.onReceiveValue(null);web.removeJavascriptInterface("AndroidExport");web.destroy();super.onDestroy();}
 }

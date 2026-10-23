@@ -59,5 +59,6 @@ render=function(){
  if(['teams','matches','standings'].includes(view))decoratePools();
  if(view==='finals')sportFinalsLayout();
  if(view==='players')$('app').querySelector('.card > .actions')?.classList.add('clubfilters');
+ if(['matches','standings','backup','more'].includes(view))addPoolPrintControls();
 };
 render();
