@@ -1,0 +1,57 @@
+package fr.crozon.badminton;
+
+import android.webkit.WebView;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.junit.Assert.*;
+
+@RunWith(AndroidJUnit4.class)
+public class PoolPrintTest {
+ @Rule public ActivityTestRule<MainActivity> activity = new ActivityTestRule<>(MainActivity.class);
+ private WebView findWeb(View view){
+  if(view instanceof WebView)return (WebView)view;
+  if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++){WebView found=findWeb(((ViewGroup)view).getChildAt(i));if(found!=null)return found;}
+  return null;
+ }
+ private String js(WebView web,String script) throws Exception {
+  CountDownLatch done=new CountDownLatch(1);AtomicReference<String> result=new AtomicReference<>();
+  InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.evaluateJavascript(script,value->{result.set(value);done.countDown();}));
+  assertTrue("Réponse JavaScript",done.await(15,TimeUnit.SECONDS));return result.get();
+ }
+ @Test public void poolTitleButtonOpensOnlyThatPoolInAndroidPrintView() throws Exception {
+  MainActivity screen=activity.getActivity();AtomicReference<WebView> reference=new AtomicReference<>();
+  InstrumentationRegistry.getInstrumentation().runOnMainSync(()->reference.set(findWeb(screen.getWindow().getDecorView())));
+  WebView app=reference.get();assertNotNull(app);
+  long deadline=System.currentTimeMillis()+30000;
+  while(!"true".equals(js(app,"typeof addDirectPoolPrintButtons==='function'"))&&System.currentTimeMillis()<deadline)Thread.sleep(100);
+  assertEquals("Chargement de l’interface : "+js(app,"navigator.userAgent"),"true",js(app,"typeof addDirectPoolPrintButtons==='function'"));
+  assertEquals("Menu de réserve et modèle de huit équipes", "true",js(app,"go('printing');(function(){var s=document.getElementById('blankPoolSize');var d=new DOMParser().parseFromString(buildBlankPoolTemplateHtml(8),'text/html');return document.getElementById('blankKnockoutSize').options.length===4 && new DOMParser().parseFromString(buildBlankKnockoutTemplateHtml(32),'text/html').querySelectorAll('.tree-match').length===31 && s.options.length===6 && s.options[0].value==='3' && s.options[5].value==='8' && !!document.getElementById('printBlankTemplate') && d.querySelectorAll('.matches tbody tr').length===28 && d.querySelectorAll('.rankings tbody tr').length===8;})()"));
+  assertEquals("Arbres principal et consolante", "true",js(app,"go('finals');(function(){var m=document.querySelector('[data-bracket=main]'),c=document.querySelector('[data-bracket=consol]');return !m.hidden && c.hidden && m.querySelectorAll('.tree-match').length===7 && c.querySelectorAll('.tree-match').length===15 && m.querySelectorAll('.tree-links path').length===7 && !!m.querySelector('.tree-champion');})()"));
+  // Le pont est celui du WebView Android installé, pas un remplacement de test.
+  assertEquals("true",js(app,"typeof AndroidExport.printHtml==='function'"));
+  assertEquals("true",js(app,"go('matches');choosePool('A');(function(){var b=document.querySelector('[data-print-pool=\"A\"]');return !!b && b.parentElement.querySelector('h2').textContent.indexOf('Poule A')===0 && b.getBoundingClientRect().top>=0 && b.getBoundingClientRect().top<innerHeight;})()"));
+  js(app,"document.querySelector('[data-print-pool=\"A\"]').click();document.getElementById('printChoiceBlank').click()");
+  Field field=MainActivity.class.getDeclaredField("printWeb");field.setAccessible(true);
+  AtomicReference<WebView> print=new AtomicReference<>();deadline=System.currentTimeMillis()+15000;
+  do{InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{try{print.set((WebView)field.get(screen));}catch(IllegalAccessException e){throw new RuntimeException(e);}});if(print.get()==null)Thread.sleep(100);}while(print.get()==null&&System.currentTimeMillis()<deadline);
+  assertNotNull("Le clic doit ouvrir le document Android dédié",print.get());
+  String document="false";deadline=System.currentTimeMillis()+15000;
+  do{document=js(print.get(),"(function(){return document.querySelectorAll('.sheet').length===1 && document.querySelector('h1').textContent.indexOf('Poule A')===0 && document.querySelectorAll('.matches tbody tr').length===10 && document.querySelector('.matches tbody tr').cells[0].textContent==='1 contre 2' && document.querySelectorAll('.matches th').length===5 && !!document.querySelector('.rankings') && document.body.textContent.indexOf('Récupération locale')<0;})()");if(!"true".equals(document))Thread.sleep(100);}while(!"true".equals(document)&&System.currentTimeMillis()<deadline);
+  assertEquals("Une page contenant la poule A, ses 10 matchs et son classement", "true", document);
+  // Laisser le dialogue d’impression être affiché ; aucun envoi à une imprimante.
+  Thread.sleep(2500);
+  // Fermer le dialogue avant la destruction de l’activité de test.
+  InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent KEYCODE_BACK").close();
+  Thread.sleep(1500);
+ }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "tournoi-crozon-v2-checks",
+  "private": true,
+  "version": "2.0.0",
+  "scripts": {"test": "node --test tests/*.test.cjs"},
+  "devDependencies": {"jsdom": "26.1.0"}
+}
