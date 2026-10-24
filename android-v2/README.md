@@ -2,6 +2,8 @@
 
 Application Android hors connexion, issue du projet V3 du ZIP original.
 
+Version 2.2.5 : depuis Imprimer, menu des feuilles entièrement vierges pour poules de 3 à 8 équipes. Noms, scores et classement vides ; toutes les rencontres générées par numéros. Modèles indépendants des données du tournoi ; deux colonnes de rencontres pour 7 et 8 équipes afin de conserver une page A4 lisible.
+
 Version 2.2.4 : feuille A4 validée avec liste numérotée des équipes, rencontres « 1 contre 2 » sans numéro de match ni noms répétés, cases de scores et classement. Le bouton à côté du titre de la poule propose feuille vierge ou avec scores. Bouton clair/sombre à côté d’Imprimer sur téléphone. Signature permanente identique à la V2.2.2.
 
 Version 2.2.3 : bouton clair/sombre rétabli dans l’en-tête sur téléphone, juste à côté d’Imprimer. Icône soleil en mode sombre, lune en mode clair. Emplacements d’impression conservés. Signature permanente identique à la V2.2.2 pour une mise à jour sans désinstallation.
