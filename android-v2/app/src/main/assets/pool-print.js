@@ -25,7 +25,7 @@ function addDirectPoolPrintButtons(){
  });
 }
 function openPoolPrinting(){go('printing');window.scrollTo(0,0);}
-function renderPoolPrinting(){$('app').innerHTML='';addPoolPrintControls();addBlankPoolTemplateControls();}
+function renderPoolPrinting(){$('app').innerHTML='';addPoolPrintControls();addBlankKnockoutTemplateControls();addBlankPoolTemplateControls();}
 /* Feuilles autonomes : équipes, rencontres et classement sur une page par poule. */
 function addPoolPrintControls(){
  const section=document.createElement('div');section.className='card no-print';section.id='poolPrintControls';
@@ -76,3 +76,11 @@ function sendPoolPrintHtml(html){
  const popup=window.open('','_blank');if(!popup){alert('Autorisez l’ouverture de la fenêtre d’impression.');return;}
  popup.document.open();popup.document.write(html);popup.document.close();popup.onload=()=>{popup.fitSheets();popup.print();};
 }
+
+function addBlankKnockoutTemplateControls(){
+ const section=document.createElement('section');section.className='card no-print';section.id='blankKnockoutTemplateControls';
+ section.innerHTML=`<h2>Tableaux vierges de réserve</h2><p>Un arbre entièrement vide à remplir à la main : équipes, résultats et vainqueur. Seuls les titres des tours sont indiqués.</p><label>Nombre de places <select id="blankKnockoutSize" aria-label="Nombre de places du tableau vierge">${[4,8,16,32].map(n=>`<option value="${n}" ${n===8?'selected':''}>Tableau de ${n} places</option>`).join('')}</select></label><div class="actions"><button id="printBlankKnockout" class="primary" onclick="printBlankKnockoutTemplate(Number(document.getElementById('blankKnockoutSize').value))">Imprimer ce tableau vierge</button></div><small>Pour le principal ou la consolante · format A3 paysage, conseillé pour les grands tableaux.</small>`;
+ $('app').prepend(section);
+}
+function buildBlankKnockoutTemplateHtml(size){if(![4,8,16,32].includes(size))throw Error('Choisis un tableau de 4, 8, 16 ou 32 places.');return buildKnockoutPrintHtml('main',size);}
+function printBlankKnockoutTemplate(size){try{sendPoolPrintHtml(buildBlankKnockoutTemplateHtml(size));}catch(e){alert(e.message);}}
